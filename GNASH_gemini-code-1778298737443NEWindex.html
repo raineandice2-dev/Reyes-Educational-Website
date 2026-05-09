@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Principles of Design | IT1 Finals</title>
+    <style>
+        /* 
+        --- CSS VARIABLES & RESET --- 
+        */
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e3a8a;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --white: #ffffff;
+            --accent: #3b82f6;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 
+        --- HEADER & HERO SECTION --- 
+        */
+        header {
+            height: 100vh;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--secondary) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            max-width: 600px;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-primary {
+            padding: 15px 35px;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: var(--transition);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            background-color: var(--accent);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        }
+
+        /* 
+        --- STICKY NAVIGATION --- 
+        */
+        nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 15px;
+            border-radius: 20px;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* 
+        --- MAIN CONTENT SECTIONS --- 
+        */
+        section {
+            padding: 100px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        section.reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .content-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .content-card { grid-template-columns: 1fr; }
+            section { padding: 60px 20px; }
+        }
+
+        .text-content p {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 20px;
+        }
+
+        .why-it-matters {
+            display: inline-block;
+            background: #e0f2fe;
+            color: var(--secondary);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* 
+        --- VISUAL EXAMPLES (PURE CSS) --- 
+        */
+        .visual-box {
+            height: 250px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 1. Balance */
+        .ex-balance { width: 100%; display: flex; justify-content: space-around; align-items: center; }
+        .bal-box { width: 60px; height: 60px; background: var(--primary); border-radius: 8px; }
+        .bal-asym { width: 100px; height: 100px; background: var(--primary); border-radius: 8px; }
+        .bal-small { width: 30px; height: 30px; background: var(--accent); border-radius: 50%; }
+
+        /* 2. Repetition */
+        .ex-repetition { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .rep-shape { width: 40px; height: 40px; background: var(--secondary); border-radius: 4px; }
+
+        /* 3. Emphasis */
+        .ex-emphasis { display: flex; align-items: center; gap: 20px; }
+        .emp-small { width: 30px; height: 30px; background: #cbd5e1; border-radius: 50%; }
+        .emp-large { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; transform: scale(1.1); box-shadow: 0 0 20px rgba(37,99,235,0.4); border: 5px solid white; }
+
+        /* 4. Contrast */
+        .ex-contrast { width: 100%; height: 100%; display: flex; }
+        .con-light { flex: 1; background: #fff; display: flex; align-items: center; justify-content: center; color: #000; font-weight: bold; }
+        .con-dark { flex: 1; background: var(--dark); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; }
+
+        /* 5. Movement */
+        .ex-movement { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; gap: 15px; padding: 20px;}
+        .move-arrow { width: 0; height: 0; border-top: 20px solid transparent; border-bottom: 20px solid transparent; border-left: 30px solid var(--primary); animation: slide 2s infinite ease-in-out; position: relative; }
+        @keyframes slide { 0% { left: 0%; opacity: 0; } 50% { opacity: 1; } 100% { left: 80%; opacity: 0; } }
+
+        /* 6. Rhythm */
+        .ex-rhythm { display: flex; align-items: flex-end; gap: 10px; }
+        .rhy-bar { width: 20px; background: var(--secondary); border-radius: 4px 4px 0 0; animation: bounce 1.5s infinite alternate; }
+        @keyframes bounce { from { height: 30px; } to { height: 100px; } }
+
+        /* 7. Unity */
+        .ex-unity { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 20px; background: rgba(37, 99, 235, 0.1); border-radius: 12px; }
+        .uni-sq { width: 50px; height: 50px; background: var(--primary); border-radius: 4px; border: 2px solid var(--secondary); }
+
+        /* 8. White Space */
+        .ex-whitespace { width: 100%; height: 100%; background: white; display: flex; justify-content: center; align-items: center; }
+        .ws-content { width: 40px; height: 40px; background: var(--dark); border-radius: 4px; }
+
+        /* 9. Proportion */
+        .ex-proportion { display: flex; align-items: flex-end; gap: 10px; }
+        .prop-1 { width: 20px; height: 20px; background: var(--accent); }
+        .prop-2 { width: 40px; height: 40px; background: var(--primary); }
+        .prop-3 { width: 80px; height: 80px; background: var(--secondary); }
+
+        /* 10. Pattern */
+        .ex-pattern {
+            width: 100%; height: 100%;
+            background-color: var(--white);
+            background-image: radial-gradient(var(--primary) 2px, transparent 2px);
+            background-size: 20px 20px;
+        }
+
+        /* 
+        --- UTILITIES --- 
+        */
+        #backToTop {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 2000;
+        }
+
+        #backToTop.show { opacity: 1; visibility: visible; }
+
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer-info { margin-top: 20px; opacity: 0.7; font-size: 0.9rem; line-height: 2; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header id="home">
+        <div class="hero-content">
+            <h1>Principles of Design</h1>
+            <p>The fundamental rules that guide visual composition. Understanding these principles is essential for creating effective, professional, and balanced digital experiences.</p>
+            <a href="#balance" class="btn-primary">Start Learning</a>
+        </div>
+    </header>
+
+    <!-- Sticky Navigation Bar -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#balance" class="nav-link">Balance</a>
+            <a href="#repetition" class="nav-link">Repetition</a>
+            <a href="#emphasis" class="nav-link">Emphasis</a>
+            <a href="#contrast" class="nav-link">Contrast</a>
+            <a href="#movement" class="nav-link">Movement</a>
+            <a href="#rhythm" class="nav-link">Rhythm</a>
+            <a href="#unity" class="nav-link">Unity</a>
+            <a href="#whitespace" class="nav-link">White Space</a>
+            <a href="#proportion" class="nav-link">Proportion</a>
+            <a href="#pattern" class="nav-link">Pattern</a>
+        </div>
+    </nav>
+
+    <!-- 1. Balance -->
+    <section id="balance">
+        <h2 class="section-title">⚖️ Balance</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Balance refers to the distribution of visual weight in a composition. It can be symmetrical (even on both sides) or asymmetrical (different but visually equal).</p>
+                <div class="why-it-matters">Why it matters: It provides a sense of stability and structure to the viewer.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-balance">
+                    <div class="bal-box"></div>
+                    <div class="bal-box"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Repetition -->
+    <section id="repetition">
+        <h2 class="section-title">🔄 Repetition</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Repetition is the consistent use of elements like color, shapes, or textures throughout a design. It helps to unify the overall message of the project.</p>
+                <div class="why-it-matters">Why it matters: It builds consistency and strengthens the brand identity.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-repetition">
+                    <div class="rep-shape"></div>
+                    <div class="rep-shape"></div>
+                    <div class="rep-shape"></div>
+                    <div class="rep-shape"></div>
+                    <div class="rep-shape"></div>
+                    <div class="rep-shape"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Emphasis -->
+    <section id="emphasis">
+        <h2 class="section-title">🎯 Emphasis</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Emphasis creates a focal point in a design. It draws the viewer's attention to the most important element using size, color, or unique shapes.</p>
+                <div class="why-it-matters">Why it matters: It ensures that the user doesn't miss the primary call to action.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-emphasis">
+                    <div class="emp-small"></div>
+                    <div class="emp-large"></div>
+                    <div class="emp-small"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Contrast -->
+    <section id="contrast">
+        <h2 class="section-title">🌗 Contrast</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Contrast is the arrangement of opposite elements—light vs dark, rough vs smooth, large vs small—to create visual excitement and direct attention.</p>
+                <div class="why-it-matters">Why it matters: It improves readability and makes important details stand out.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-contrast">
+                    <div class="con-light">LIGHT</div>
+                    <div class="con-dark">DARK</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Movement -->
+    <section id="movement">
+        <h2 class="section-title">🚀 Movement</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Movement is the path the viewer's eye takes through a design. It can be created with lines, edges, shape, and color that lead the eye in a specific direction.</p>
+                <div class="why-it-matters">Why it matters: It guides the user through the narrative flow of the information.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-movement">
+                    <div class="move-arrow"></div>
+                    <div class="move-arrow" style="animation-delay: 0.5s"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Rhythm -->
+    <section id="rhythm">
+        <h2 class="section-title">🎵 Rhythm</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Rhythm is created when one or more elements of design are used repeatedly to create a feeling of organized movement, much like a musical beat.</p>
+                <div class="why-it-matters">Why it matters: It creates an underlying mood and a sense of "tempo" in the layout.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-rhythm">
+                    <div class="rhy-bar" style="height: 40px; animation-delay: 0.1s"></div>
+                    <div class="rhy-bar" style="height: 70px; animation-delay: 0.3s"></div>
+                    <div class="rhy-bar" style="height: 50px; animation-delay: 0.5s"></div>
+                    <div class="rhy-bar" style="height: 90px; animation-delay: 0.7s"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Unity / Harmony -->
+    <section id="unity">
+        <h2 class="section-title">🧩 Unity / Harmony</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Unity is the sense of harmony between all the elements in a layout. It makes the design feel like a single, cohesive piece rather than scattered parts.</p>
+                <div class="why-it-matters">Why it matters: It makes the final design look finished and professional.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-unity">
+                    <div class="uni-sq"></div><div class="uni-sq"></div><div class="uni-sq"></div>
+                    <div class="uni-sq"></div><div class="uni-sq"></div><div class="uni-sq"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. White Space -->
+    <section id="whitespace">
+        <h2 class="section-title">☁️ White Space</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>White space, or negative space, is the empty area between design elements. It gives the eye a place to rest and prevents a design from looking cluttered.</p>
+                <div class="why-it-matters">Why it matters: It significantly improves focus, clarity, and overall aesthetics.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-whitespace">
+                    <div class="ws-content"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Proportion -->
+    <section id="proportion">
+        <h2 class="section-title">📏 Proportion</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Proportion refers to the relative size and scale of various elements. It describes the relationship between objects or parts of a whole.</p>
+                <div class="why-it-matters">Why it matters: It helps define the hierarchy and importance of different sections.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-proportion">
+                    <div class="prop-1"></div>
+                    <div class="prop-2"></div>
+                    <div class="prop-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Pattern -->
+    <section id="pattern">
+        <h2 class="section-title">🧱 Pattern</h2>
+        <div class="content-card">
+            <div class="text-content">
+                <p>Pattern is a regular arrangement of duplicated elements like shapes, lines, or colors. It is often used to add texture and detail to a surface.</p>
+                <div class="why-it-matters">Why it matters: It provides a structured background and visual richness.</div>
+            </div>
+            <div class="visual-box">
+                <div class="ex-pattern"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Back to Top Button -->
+    <div id="backToTop" title="Back to Top">▲</div>
+
+    <!-- Footer -->
+    <footer>
+        <h3>IT1 Finals Project</h3>
+        <div class="footer-info">
+            <p><strong>Name:</strong> [Gnash Raine I Reyes]</p>
+            <p><strong>Section:</strong> [BSIT - 1]</p>
+            <p><strong>Date:</strong> May 9, 2026</p>
+        </div>
+    </footer>
+
+    <!-- 
+    --- JAVASCRIPT --- 
+    -->
+    <script>
+        // --- Selection of Elements ---
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const backToTop = document.getElementById('backToTop');
+
+        // --- Intersection Observer for Reveal Animations ---
+        const revealOptions = {
+            threshold: 0.2
+        };
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('reveal');
+                    
+                    // Update Active Nav Link
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, revealOptions);
+
+        sections.forEach(section => {
+            revealObserver.observe(section);
+        });
+
+        // --- Back to Top Logic ---
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // --- Smooth Scrolling for Navigation ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
